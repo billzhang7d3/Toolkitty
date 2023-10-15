@@ -2,7 +2,7 @@ require("dotenv").config();
 const {Client, Intents, IntentsBitField, MessageAttachment, AttachmentBuilder, EmbedBuilder} = require("discord.js");
 
 const {colemakify, qwertify, repellent} = require("./smallCommands.js");
-const {pinExtract} = require("./pinCommands.js");
+const {pinExtract, pinShow} = require("./pinCommands.js");
 
 const client = new Client({
     intents: [
@@ -39,7 +39,7 @@ client.on("messageCreate", (msg) => {
     msgList = msg.content.substring(prefix.length).split(" ");
     //repellent
     if (msgList.length >= 1) {
-        if (msgList[0] === "repellent") {
+        if (msgList[0] === "repellent" && msg.member.permissions.has("Administrator")) {
             if (!isNaN(parseInt(msgList[1]))) {
                 repellent(msg.channel, parseInt(msgList[1]));
             } else {
@@ -87,6 +87,11 @@ client.on("messageCreate", async (msg) => {
             }
         } else {
             msg.channel.send(`There are no pins within the ${parseInt(msgList[1])} and ${parseInt(msgList[2])} interval in this channel~`);
+        }
+    } else if (msgList.length == 2 && msgList[0] === "pinshow" && !isNaN(msgList[1])) {
+        let content = await pinShow(msg.channel, parseInt(msgList[1]));
+        if (content !== "nope") {
+            msg.channel.send(content);
         }
     }
 });
