@@ -13,6 +13,7 @@ async function pinExtract(channel, start, end) {
     let pinList = await channel.messages.fetchPinned();
     pinList = Array.from(pinList.values()).map(message => (message.url));
     let outputList = [""], ind = 0;
+    //for (let i = start - 1; i <= Math.min(pinList.length - 1, end); ++i) {
     for (let i = Math.min(pinList.length - 1, end - 1); i >= start - 1; --i) {
         if (outputList[ind].length + pinList[i].length + 2 <= 2000) {
             outputList[ind] += pinList[i] + "\n";
@@ -39,7 +40,7 @@ async function pinShow(channel, index) {
     let ans = "";
     for (let i = 0; i < pinList[index - 1].content.length; ++i) {
         if (pinList[index - 1].content[i] === '@') {
-            ans += "[@]";
+            ans += "\`@\`";
         } else {
             ans += pinList[index - 1].content[i];
         }
