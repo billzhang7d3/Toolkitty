@@ -1,5 +1,6 @@
 require("dotenv").config();
 const {Client, Intents, IntentsBitField, MessageAttachment, AttachmentBuilder, EmbedBuilder} = require("discord.js");
+const {OpenAI} = require("openai"); 
 
 const {colemakify, qwertify, repellent} = require("./smallCommands.js");
 const {pinExtract, pinShow} = require("./pinCommands.js");
@@ -106,5 +107,60 @@ client.on("messageCreate", (msg) => {
         }
     }
 });
+
+//work in progress stuff
+const wip = [
+    "summarization subset", 
+    "slash commands", 
+    "a proper help message"
+];
+client.on("messageCreate", (msg) => {
+    if (!msg.content.toLowerCase().startsWith(prefix) || msg.author.bot) { return; }
+    msgList = msg.content.substring(prefix.length).split(" ");
+    if (msgList.length == 1) {
+        if (msgList[0] === "wip") {
+            msg.channel.send(wip.join("\n"));
+        }
+    }
+})
+
+const openai = new OpenAI({
+    apiKey: process.env.API_KEY,
+})
+
+//summary message
+client.on("messageCreate", async (msg) => {
+    if (!msg.content.toLowerCase().startsWith(prefix) || msg.author.bot) { return; }
+    msgList = msg.content.substring(prefix.length).split(" ");
+    if (msgList.length == 2 && msgList[0] == "summarize" && !isNaN(parseInt(msgList[1]))) {
+        //summarize from n messages above
+        if (parseInt(msgList[1]) + 1 > 100) {
+            msg.channel.send(`I am not advanced enough to fetch the ${parseInt(msgList[1])} previous messages in this channel.`);
+            return;
+        }
+        let msgContents = await msg.channel.messages.fetch({ limit: parseInt(msgList[1]) + 1 });
+        //console.log(msgContents);
+        let authors = Array.from(msgContents.values()).map(message => (message.author.username));
+        let messages = Array.from(msgContents.values()).map(message => (message.content));
+        messages.reverse();
+        let msgStr = messages.join(" ");
+        console.log(authors);
+        console.log(msgStr);
+        console.log(messages);
+        const res = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: [{ "role": "user", "content": msgStr}],
+        }).catch((error) => console.error("OpenAI Error:\n", error));
+        console.log(res);
+        console.log(res.choices[0].message.content);
+        msg.channel.send(res.choices[0].message.content);
+    } else if (msgList.length == 2 && msgList[0] == "summarize") {
+        //summarize from linked message to now
+
+    } else if (msgList.length == 3 && msgList[0] == "summarize") {
+        //summarize from first linked message to second linked message
+        msg.channel.send("feature coming soon");
+    }
+})
 
 client.login(process.env.TOKEN);
