@@ -132,7 +132,8 @@ const openai = new OpenAI({
 client.on("messageCreate", async (msg) => {
     if (!msg.content.toLowerCase().startsWith(prefix) || msg.author.bot) { return; }
     msgList = msg.content.substring(prefix.length).split(" ");
-    if (msgList.length == 2 && msgList[0] == "summarize" && !isNaN(parseInt(msgList[1]))) {
+    if (msgList.length == 2 && msgList[0] === "summarize" && !isNaN(parseInt(msgList[1]))) {
+        await msg.channel.sendTyping();
         //summarize from n messages above
         if (parseInt(msgList[1]) + 1 > 100) {
             msg.channel.send(`I am not advanced enough to fetch the ${parseInt(msgList[1])} previous messages in this channel.`);
@@ -143,10 +144,13 @@ client.on("messageCreate", async (msg) => {
         let authors = Array.from(msgContents.values()).map(message => (message.author.username));
         let messages = Array.from(msgContents.values()).map(message => (message.content));
         messages.reverse();
-        let msgStr = messages.join(" ");
+        messages.pop();
+        authors.reverse();
+        authors.pop();
         console.log(authors);
         console.log(msgStr);
         console.log(messages);
+        let msgStr = "Summarize the following that is said: " + messages.join(" ");
         const res = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             messages: [{ "role": "user", "content": msgStr}],
@@ -160,6 +164,25 @@ client.on("messageCreate", async (msg) => {
     } else if (msgList.length == 3 && msgList[0] == "summarize") {
         //summarize from first linked message to second linked message
         msg.channel.send("feature coming soon");
+    }
+})
+
+//gpt-4 command
+client.on("messageCreate", async (msg) => {
+    if (!msg.content.toLowerCase().startsWith(prefix) || msg.author.bot) { return; }
+    msgList = msg.content.substring(prefix.length).split(" ");
+    if (msgList.length > 1 && msgList[0] === "gpt4") {
+        if (msg.author.username === process.env.username1 || msg.author.username === process.env.username2) {
+            await msg.channel.sendTyping();
+            const prompt = msgList.slice(1).join(" ");
+            const res = await openai.chat.completions.create({
+                model: "gpt-4",
+                messages: [{ "role": "user", "content": prompt}],
+            }).catch((error) => console.error("OpenAI Error:\n", error));
+            msg.channel.send(res.choices[0].message.content);
+        } else {
+            msg.channel.send("That's not me");
+        }
     }
 })
 
