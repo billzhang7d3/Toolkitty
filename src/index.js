@@ -143,17 +143,22 @@ client.on("messageCreate", async (msg) => {
         //console.log(msgContents);
         let authors = Array.from(msgContents.values()).map(message => (message.author.username));
         let messages = Array.from(msgContents.values()).map(message => (message.content));
+        let timestamps = Array.from(msgContents.values()).map(message => (new Date(message.createdTimestamp * 1000)));
         messages.reverse();
         messages.pop();
         authors.reverse();
         authors.pop();
-        console.log(authors);
-        console.log(msgStr);
-        console.log(messages);
-        let msgStr = "Summarize the following that is said: " + messages.join(" ");
+        timestamps.reverse();
+        timestamps.pop();
+        console.log(authors); console.log(messages); console.log(timestamps);
+        let conversation = "Summarize the following conversation without any mention of the timestamps: \n";
+        for (let i = 0; i < messages.length; ++i) {
+            conversation += `${authors[i]} said the following at ${timestamps[i].getMinutes()}: "${messages[i]}"\n` 
+        }
+        console.log(conversation);
         const res = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
-            messages: [{ "role": "user", "content": msgStr}],
+            messages: [{ "role": "user", "content": conversation}],
         }).catch((error) => console.error("OpenAI Error:\n", error));
         console.log(res);
         console.log(res.choices[0].message.content);
