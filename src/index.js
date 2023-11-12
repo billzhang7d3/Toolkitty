@@ -140,7 +140,7 @@ client.on("messageCreate", async (msg) => {
             return;
         }
         let msgContents = await msg.channel.messages.fetch({ limit: parseInt(msgList[1]) + 1 });
-        //console.log(msgContents);
+        console.log(msgContents);
         let authors = Array.from(msgContents.values()).map(message => (message.author.username));
         let messages = Array.from(msgContents.values()).map(message => (message.content));
         let timestamps = Array.from(msgContents.values()).map(message => (new Date(message.createdTimestamp * 1000)));
@@ -165,10 +165,44 @@ client.on("messageCreate", async (msg) => {
         msg.channel.send(res.choices[0].message.content);
     } else if (msgList.length == 2 && msgList[0] == "summarize") {
         //summarize from linked message to now
-
+        //nah I'm not doing this now
+        await msg.channel.sendTyping();
+        let msgContents = await msg.channel.messages.fetch({
+            limit: 3,
+            around: msgList[1]
+        }).catch((error) => console.error("Message Link Error, [fix this later]\n", error));
+        console.log(msgContents);
+        msg.channel.send("check the console output");
     } else if (msgList.length == 3 && msgList[0] == "summarize") {
         //summarize from first linked message to second linked message
-        msg.channel.send("feature coming soon");
+        //later I will check if the guilds are matching and if the one timestamp is less than the other
+        await msg.channel.sendTyping();
+        let messages = [], authors = [], timestamps = [];
+        let curLink = msgList[1];
+        for (;;) {
+            let cur = await msg.channel.messages.fetch({
+                limit: 3, 
+                around: curLink
+            }).catch((error) => console.error("Message Link Error, [fix this later]\n", error));
+            cur = Array.from(cur.values());
+            messages.push(cur[1].content);
+            authors.push(cur[1].author.username);
+            timestamps.push(new Date(cur[1].createdTimestamp * 1000));
+            if (curLink == msgList[2]) { break; }
+            curLink = cur[0].id;
+        }
+        let conversation = "Summarize the following conversation without any mention of the timestamps: \n";
+        for (let i = 0; i < messages.length; ++i) {
+            conversation += `${authors[i]} said the following at ${timestamps[i].getMinutes()}: "${messages[i]}"\n` 
+        }
+        console.log(conversation);
+        const res = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages: [{ "role": "user", "content": conversation}],
+        }).catch((error) => console.error("OpenAI Error:\n", error));
+        console.log(res);
+        console.log(res.choices[0].message.content);
+        msg.channel.send(res.choices[0].message.content);
     }
 })
 
