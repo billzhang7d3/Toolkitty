@@ -1,5 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const fs = require("fs");
 
 const url = "https://www.teenvogue.com/story/20-questions-ask-best-friend-become-closer-relationships";
 let questions = [];
