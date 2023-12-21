@@ -1,8 +1,8 @@
+require("dotenv").config();
 const axios = require("axios");
 const cheerio = require("cheerio");
-const fs = require("fs");
 
-const url = "https://www.teenvogue.com/story/20-questions-ask-best-friend-become-closer-relationships";
+const url = process.env.QUESTIONS1;
 let questions = [];
 
 axios.get(url)
@@ -17,12 +17,10 @@ axios.get(url)
                 questions.push(str.substring(index));
             }
         })
-        for (let i = 0; i < questions.length; ++i) {
-            console.log(questions[i]);
-        }
+        //for (let i = 0; i < questions.length; ++i) { console.log(questions[i]); }
     })
     .catch(error => {
-        console.error("Error fetching the page:", error);
+        console.error("Error fetching question list\n", error);
     });
 
-exports.questionList = questions;
+exports.questions = questions;

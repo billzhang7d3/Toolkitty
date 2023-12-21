@@ -27,7 +27,7 @@ module.exports = {
      * @param {ChatInputCommandInteraction} interaction 
      */
     async execute(interaction) {
-        if (interaction.user.username === process.env.username1 || interaction.user.username === process.env.username2) {
+        if (interaction.user.username === process.env.USERNAME1 || interaction.user.username === process.env.USERNAME2) {
             console.log("the prompt is: " + interaction.options.getString("prompt"));
             await interaction.deferReply();
             const res = await openai.chat.completions.create({
