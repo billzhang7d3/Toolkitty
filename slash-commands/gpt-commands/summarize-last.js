@@ -51,7 +51,7 @@ module.exports = {
         await interaction.deferReply();
         let channel = interaction.options.getChannel("channel") ?? interaction.channel;
         const res = await summarizeN(channel, interaction.options.getInteger("n"));
-        console.log("checkpoint 555555");
+        //console.log("checkpoint 555555");
         await interaction.editReply(res);
     }    
 }

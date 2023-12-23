@@ -1,11 +1,16 @@
+require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
 const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const { token } = require("./config.json");
+const questionItems = require("./backend/questions.js");
+const cron = require("cron");
 
 const client = new Client({intents: [
     GatewayIntentBits.Guilds
 ]});
+
+let asked = false;
 
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, "slash-commands");
@@ -63,5 +68,25 @@ client.on(Events.InteractionCreate, async interaction => {
         }
     }
 });
+
+//qotd message scheduling
+client.once("ready", () => {
+    let qotd = cron.CronJob.from({
+        cronTime: "0 0 0 * * *",
+        onTick: function() {
+            let number = parseInt(fs.readFileSync("./backend/questionNumber.txt"));
+            let channel = client.channels.cache.get("1051617097458929706");
+            //console.log(channel.id);
+            if (number < questionItems.questions.length) {
+                channel.send(questionItems.questions[number++]);
+                fs.writeFileSync("./backend/questionNumber.txt", number.toString());
+            } else {
+                channel.send(`Ran out of questions <@${process.env.USERNAME1}> please fix :c`);
+            }
+        },
+        start: true,
+        timeZone: "America/Los_Angeles"
+    });
+})
 
 client.login(token);
