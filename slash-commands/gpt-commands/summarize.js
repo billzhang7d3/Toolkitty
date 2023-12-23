@@ -37,7 +37,7 @@ async function summarize(channel, msgID1, msgID2, cutoff) {
         //console.log("========================================="); console.log(cur[1].content); console.log(cur[1].author.username); console.log(cur[1].createdTimestamp);
         messages.push(cur[1].content);
         authors.push(cur[1].author.username);
-        timestamps.push(new Date(cur[1].createdTimestamp * 1000));
+        timestamps.push(new Date(cur[1].createdTimestamp));
         if (curLink == msg2.id) { break; }
         curLink = cur[0].id;
     }

@@ -71,17 +71,77 @@ client.on(Events.InteractionCreate, async interaction => {
 
 //qotd message scheduling
 client.once("ready", () => {
+    let sent = fs.readFileSync("./backend/sent.txt") === "true";
     let qotd = cron.CronJob.from({
         cronTime: "0 0 0 * * *",
-        onTick: function() {
+        onTick: async function() {
             let number = parseInt(fs.readFileSync("./backend/questionNumber.txt"));
             let channel = client.channels.cache.get("1051617097458929706");
-            //console.log(channel.id);
+            sent = false;
             if (number < questionItems.questions.length) {
+                /*let recent = await channel.messages.fetch();
+                console.log(recent.createdTimestamp);
+                let timestamp = new Date(recent.createdTimestamp * 1000);*/
                 channel.send(questionItems.questions[number++]);
                 fs.writeFileSync("./backend/questionNumber.txt", number.toString());
+                fs.writeFileSync("./backend/sent.txt", "true");
             } else {
                 channel.send(`Ran out of questions <@${process.env.USERNAME1}> please fix :c`);
+                fs.writeFileSync("./backend/sent.txt", "true");
+            }
+        },
+        start: true,
+        timeZone: "America/Los_Angeles"
+    });
+    let retry = cron.CronJob.from({
+        cronTime: "0 5 * * * * ",
+        onTick: async function() {
+            console.log("will look into sending message");
+            /*
+            let number = parseInt(fs.readFileSync("./backend/questionNumber.txt"));
+            let channel = client.channels.cache.get("1051617097458929706");
+            if (number < questionItems.questions.length) {
+                let recent = await channel.messages.fetch();
+                console.log(recent.createdTimestamp);
+                let timestamp = new Date(recent.createdTimestamp * 1000);
+                channel.send(questionItems.questions[number++]);
+                fs.writeFileSync("./backend/questionNumber.txt", number.toString());
+                fs.writeFileSync("./backend/sent.txt", "true");
+            } else {
+                channel.send(`Ran out of questions <@${process.env.USERNAME1}> please fix :c`);
+                fs.writeFileSync("./backend/sent.txt", "true");
+            }
+            */
+        },
+        start: true,
+        timeZone: "America/Los_Angeles"
+    });
+})
+
+//dumb message detection feature that I'm just using for reference later on
+client.once("ready", () => {
+    let test = cron.CronJob.from({
+        cronTime: "0 * * * * * ",
+        onTick: async function() {
+            console.log("sending new message");
+            let channel = client.channels.cache.get("1148706636068814969");
+            //console.log(channel);
+            let recent = await channel.messages.fetch({limit: 1});
+            recent = Array.from(recent.values()).map(entry => entry.createdTimestamp);
+            let timestamp = new Date(parseInt(recent)).toLocaleString("en-US", {
+                timeZone: "America/Los_Angeles"
+            });
+            /*let date = new Date().toLocaleString("en-US", {
+                timeZone: "America/Los_Angeles"
+            });*/
+            let date = new Date();
+            console.log(typeof date.getTime());
+            let diff = (parseInt(date.getTime()) - parseInt(recent)) / (1000 * 60 * 60);
+            console.log(diff);
+            if (diff >= 1) {
+                console.log("more than one hour time difference");
+            } else {
+                console.log("message has been sent in the past hour");
             }
         },
         start: true,

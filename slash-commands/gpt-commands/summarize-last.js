@@ -13,7 +13,7 @@ async function summarizeN(channel, amount) {
     //console.log(msgContents);
     let authors = Array.from(msgContents.values()).map(message => (message.author.username));
     let messages = Array.from(msgContents.values()).map(message => (message.content));
-    let timestamps = Array.from(msgContents.values()).map(message => (new Date(message.createdTimestamp * 1000)));
+    let timestamps = Array.from(msgContents.values()).map(message => (new Date(message.createdTimestamp)));
     messages.reverse(); messages.pop();
     authors.reverse(); authors.pop();
     timestamps.reverse(); timestamps.pop();
