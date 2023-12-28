@@ -1,7 +1,7 @@
 require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
-const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
+const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder } = require("discord.js");
 const { token } = require("./config.json");
 const questionItems = require("./backend/questions.js");
 const cron = require("cron");
@@ -69,6 +69,15 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 });
 
+function buildResponse(question) {
+    const embed = new EmbedBuilder()
+        .setColor(0xFD9AB6)
+        .setTitle("Question of the Day:")
+        .setDescription(question)
+        .setFooter({text: ":3", iconURL: "https://cdn.donmai.us/original/e8/f5/__minato_aqua_and_minato_aqua_hololive_drawn_by_aka_shiba__e8f54af06a53c1fb675397b06823b134.png"});
+    return embed;
+}
+
 //qotd message scheduling
 client.once("ready", () => {
     let sent = fs.readFileSync("./backend/sent.txt");
@@ -88,7 +97,8 @@ client.once("ready", () => {
                 console.log(diff);
                 console.log(typeof diff);
                 if (diff >= 1 && sent === "false") {
-                    channel.send("**__Question of the Day:__**\n " + questionItems.questions[number++]);
+                    console.log(typeof questionItems.questions[number]);
+                    channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
                     fs.writeFileSync("./backend/questionNumber.txt", number.toString());
                     fs.writeFileSync("./backend/sent.txt", "true");
                 }
@@ -110,22 +120,11 @@ client.once("ready", () => {
             if (number < questionItems.questions.length) {
                 let recent = await channel.messages.fetch({limit: 1});
                 recent = Array.from(recent.values()).map(entry => entry.createdTimestamp);
-                console.log(recent);
                 let current = new Date();
-                console.log(`sent is ${sent}...`);
-                console.log(`sent is of ${typeof sent} type`);
                 let diff = (parseInt(current.getTime()) - parseInt(recent[0])) / (1000 * 60 * 60);
-                console.log(diff);
-                console.log(typeof diff);
-                let temp = new Date().toLocaleString("en-US", {
-                    timezone: "America/Los_Angeles"
-                });
-                console.log(temp);
-                console.log(diff >= 1);
-                console.log(sent === "false");
-                console.log(diff >= 1 && sent === "false");
                 if (diff >= 1 && sent === "false") {
-                    channel.send("**__Question of the Day:__**\n " + questionItems.questions[number++]);
+                    console.log(typeof questionItems.questions[number]);
+                    channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
                     fs.writeFileSync("./backend/questionNumber.txt", number.toString());
                     fs.writeFileSync("./backend/sent.txt", "true");
                     console.log("wrote something");
