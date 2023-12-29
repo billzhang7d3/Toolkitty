@@ -99,6 +99,11 @@ client.once("ready", () => {
                 if (diff >= 1 && sent === "false") {
                     console.log(typeof questionItems.questions[number]);
                     channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
+                    const thread = await channel.threads.create({
+                        name: "QOTD: " + String(current.getMonth()) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
+                        autoArchiveDuration: 60,
+                        reason: "Discussion pertaining to the question " + questionItems.questions[number - 1],
+                    });
                     fs.writeFileSync("./backend/questionNumber.txt", number.toString());
                     fs.writeFileSync("./backend/sent.txt", "true");
                 }
@@ -125,6 +130,11 @@ client.once("ready", () => {
                 if (diff >= 1 && sent === "false") {
                     console.log(typeof questionItems.questions[number]);
                     channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
+                    const thread = await channel.threads.create({
+                        name: "QOTD: " + String(current.getMonth()) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
+                        autoArchiveDuration: 60,
+                        reason: "Discussion pertaining to the question " + questionItems.questions[number - 1],
+                    });
                     fs.writeFileSync("./backend/questionNumber.txt", number.toString());
                     fs.writeFileSync("./backend/sent.txt", "true");
                     console.log("wrote something");
