@@ -100,7 +100,7 @@ client.once("ready", () => {
                     console.log(typeof questionItems.questions[number]);
                     channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
                     const thread = await channel.threads.create({
-                        name: "QOTD: " + String(current.getMonth()) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
+                        name: "QOTD: " + String(current.getMonth() + 1) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
                         autoArchiveDuration: 60,
                         reason: "Discussion pertaining to the question " + questionItems.questions[number - 1],
                     });
@@ -131,7 +131,7 @@ client.once("ready", () => {
                     console.log(typeof questionItems.questions[number]);
                     channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
                     const thread = await channel.threads.create({
-                        name: "QOTD: " + String(current.getMonth()) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
+                        name: "QOTD: " + String(current.getMonth() + 1) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
                         autoArchiveDuration: 60,
                         reason: "Discussion pertaining to the question " + questionItems.questions[number - 1],
                     });
