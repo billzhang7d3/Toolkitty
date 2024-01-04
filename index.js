@@ -98,7 +98,7 @@ client.once("ready", () => {
                 console.log(typeof diff);
                 if (diff >= 1 && sent === "false") {
                     console.log(typeof questionItems.questions[number]);
-                    channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
+                    await channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
                     const thread = await channel.threads.create({
                         name: "QOTD: " + String(current.getMonth() + 1) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
                         autoArchiveDuration: 60,
@@ -129,7 +129,7 @@ client.once("ready", () => {
                 let diff = (parseInt(current.getTime()) - parseInt(recent[0])) / (1000 * 60 * 60);
                 if (diff >= 1 && sent === "false") {
                     console.log(typeof questionItems.questions[number]);
-                    channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
+                    await channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
                     const thread = await channel.threads.create({
                         name: "QOTD: " + String(current.getMonth() + 1) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
                         autoArchiveDuration: 60,

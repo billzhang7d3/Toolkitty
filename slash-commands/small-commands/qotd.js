@@ -25,7 +25,7 @@ module.exports = {
         if (interaction.user.username === process.env.USERNAME1 || interaction.user.username === process.env.USERNAME2) {
             if (number < questionItems.questions.length) {
                 console.log(typeof questionItems.questions[number]);
-                interaction.channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
+                await interaction.channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
                 let current = new Date();
                 console.log(current.getMonth());
                 console.log("QOTD: " + String(current.getMonth() + 1) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()));
@@ -46,6 +46,7 @@ module.exports = {
                 fs.writeFileSync("./backend/sent.txt", "true");
                 console.log("didn't write anything");
             }
+            await interaction.reply("command executed succesfully?")
         } else {
             await interaction.reply("Sorry, you're not authorized to use this command :c");
         }
