@@ -21,6 +21,10 @@ module.exports = {
         .addStringOption(option =>
             option.setName("prompt")
             .setDescription("Don't use this command if you didn't create the bot.")
+            .setRequired(true))
+        .addBooleanOption(option => 
+            option.setName("limit")
+            .setDescription("Limits the character count to 2000.")
             .setRequired(true)),
     /**
      * 
@@ -28,11 +32,15 @@ module.exports = {
      */
     async execute(interaction) {
         if (interaction.user.username === process.env.USERNAME1 || interaction.user.username === process.env.USERNAME2) {
-            console.log("the prompt is: " + interaction.options.getString("prompt"));
+            let prompt = interaction.options.getString("prompt");
+            if (interaction.options.getBoolean("limit")) {
+                prompt += ". Give a response in 2000 characters or less.";
+            }
+            console.log("the prompt is: " + prompt);
             await interaction.deferReply();
             const res = await openai.chat.completions.create({
                 model: "gpt-4",
-                messages: [{ "role": "user", "content": interaction.options.getString("prompt")}],
+                messages: [{ "role": "user", "content": prompt}],
             }).catch((error) => console.error("OpenAI Error:\n", error));
             if (res.choices[0].message.content.length == 0) { return "empty message??";}
             console.log(res.choices[0].message.content);
