@@ -2,9 +2,6 @@ require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
 const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder } = require("discord.js");
-const { token } = require("./config.json");
-const questionItems = require("./backend/questions.js");
-const cron = require("cron");
 
 const client = new Client({intents: [
     GatewayIntentBits.Guilds
@@ -78,76 +75,4 @@ function buildResponse(question) {
     return embed;
 }
 
-//qotd message scheduling
-client.once("ready", () => {
-    let sent = fs.readFileSync("./backend/sent.txt");
-    let qotd = cron.CronJob.from({
-        cronTime: "0 0 0 * * *",
-        onTick: async function() {
-            let number = parseInt(fs.readFileSync("./backend/questionNumber.txt"));
-            let channel = client.channels.cache.get("1051617097458929706");
-            sent = "false";
-            fs.writeFileSync("./backend/sent.txt", "false");
-            if (number < questionItems.questions.length) {
-                let recent = await channel.messages.fetch({limit: 1});
-                recent = Array.from(recent.values()).map(entry => entry.createdTimestamp);
-                console.log(recent);
-                let current = new Date();
-                let diff = (parseInt(current.getTime()) - parseInt(recent[0])) / (1000 * 60 * 60);
-                console.log(diff);
-                console.log(typeof diff);
-                if (diff >= 1 && sent === "false") {
-                    console.log(typeof questionItems.questions[number]);
-                    await channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
-                    const thread = await channel.threads.create({
-                        name: "QOTD: " + String(current.getMonth() + 1) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
-                        autoArchiveDuration: 60,
-                        reason: "Discussion pertaining to the question " + questionItems.questions[number - 1],
-                    });
-                    fs.writeFileSync("./backend/questionNumber.txt", number.toString());
-                    fs.writeFileSync("./backend/sent.txt", "true");
-                }
-            } else {
-                channel.send(`Ran out of questions <@${process.env.USERNAME1}> please fix :c`);
-                fs.writeFileSync("./backend/sent.txt", "true");
-            }
-        },
-        start: true,
-        timeZone: "America/Los_Angeles"
-    });
-    let retry = cron.CronJob.from({
-        cronTime: "0 5 * * * * ",
-        onTick: async function() {
-            console.log("non 12 am prompting");
-            let number = parseInt(fs.readFileSync("./backend/questionNumber.txt"));
-            let channel = client.channels.cache.get("1051617097458929706");
-            sent = String(fs.readFileSync("./backend/sent.txt"));
-            if (number < questionItems.questions.length) {
-                let recent = await channel.messages.fetch({limit: 1});
-                recent = Array.from(recent.values()).map(entry => entry.createdTimestamp);
-                let current = new Date();
-                let diff = (parseInt(current.getTime()) - parseInt(recent[0])) / (1000 * 60 * 60);
-                if (diff >= 1 && sent === "false") {
-                    console.log(typeof questionItems.questions[number]);
-                    await channel.send({embeds: [buildResponse(questionItems.questions[number++])]});
-                    const thread = await channel.threads.create({
-                        name: "QOTD: " + String(current.getMonth() + 1) + "/" + String(current.getDate()) + "/" + String(current.getFullYear()),
-                        autoArchiveDuration: 60,
-                        reason: "Discussion pertaining to the question " + questionItems.questions[number - 1],
-                    });
-                    fs.writeFileSync("./backend/questionNumber.txt", number.toString());
-                    fs.writeFileSync("./backend/sent.txt", "true");
-                    console.log("wrote something");
-                }
-            } else {
-                channel.send(`Ran out of questions <@${process.env.USERNAME1}> please fix :c`);
-                fs.writeFileSync("./backend/sent.txt", "true");
-                console.log("didn't write anything");
-            }
-        },
-        start: true,
-        timeZone: "America/Los_Angeles"
-    });
-})
-
-client.login(token);
+client.login(process.env.TOKEN);

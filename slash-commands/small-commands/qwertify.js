@@ -30,8 +30,8 @@ module.exports = {
         .setDescription("Converts text typed from a colemak keyboard into qwerty.")
         .addStringOption(option =>
             option.setName("text")
-            .setDescription("Typed from a colemak keyboard.")
-            .setRequired(true)),
+                .setDescription("Typed from a colemak keyboard.")
+                .setRequired(true)),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 

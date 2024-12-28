@@ -27,8 +27,8 @@ module.exports = {
         .setDescription("Converts text typed from a qwerty keyboard into colemak.")
         .addStringOption(option => 
             option.setName("text")
-            .setDescription("Typed from a qwerty keyboard.")
-            .setRequired(true)),
+                .setDescription("Typed from a qwerty keyboard.")
+                .setRequired(true)),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 

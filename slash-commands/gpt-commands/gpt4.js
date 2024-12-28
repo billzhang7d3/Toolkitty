@@ -2,7 +2,7 @@ require("dotenv").config();
 const { SlashCommandBuilder } = require("discord.js");
 const { OpenAI } = require("openai");
 const openai = new OpenAI({
-    apiKey: process.env.API_KEY,
+    apiKey: process.env.OPENAI_API_KEY,
 })
 
 async function gpt4(prompt) {
@@ -14,29 +14,33 @@ async function gpt4(prompt) {
     return res.choices[0].message.content;
 }
 
+function isCorrectUser(username) {
+    return username === process.env.USERNAME1 || username === process.env.USERNAME2;
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("gpt4")
         .setDescription("Responds to the prompt with the GPT-4 LLM.")
         .addStringOption(option =>
             option.setName("prompt")
-            .setDescription("Don't use this command if you didn't create the bot.")
-            .setRequired(true))
+                .setDescription("Don't use this command if you didn't create the bot.")
+                .setRequired(true))
         .addBooleanOption(option => 
             option.setName("limit")
-            .setDescription("Limits the character count to 2000.")
-            .setRequired(true)),
+                .setDescription("Limits the character count to 2000.")
+                .setRequired(true)),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 
      */
     async execute(interaction) {
-        if (interaction.user.username === process.env.USERNAME1 || interaction.user.username === process.env.USERNAME2) {
+        if (isCorrectUser(interaction.user.username)) {
             let prompt = interaction.options.getString("prompt");
             if (interaction.options.getBoolean("limit")) {
                 prompt += ". Give a response in 2000 characters or less.";
             }
-            console.log("the prompt is: " + prompt);
+            //console.log("the prompt is: " + prompt);
             await interaction.deferReply();
             const res = await openai.chat.completions.create({
                 model: "gpt-4",

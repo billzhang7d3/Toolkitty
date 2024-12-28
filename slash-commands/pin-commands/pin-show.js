@@ -31,8 +31,8 @@ module.exports = {
         .setDescription("Shows the pin at a given integer position")
         .addIntegerOption(option => 
             option.setName("position")
-            .setDescription("Set the pin position to show.")
-            .setRequired(true)),
+                .setDescription("Set the pin position to show")
+                .setRequired(true)),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 

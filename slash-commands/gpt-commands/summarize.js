@@ -2,7 +2,7 @@ require("dotenv").config();
 const { SlashCommandBuilder } = require("discord.js");
 const { OpenAI } = require("openai");
 const openai = new OpenAI({
-    apiKey: process.env.API_KEY,
+    apiKey: process.env.OPEN_API_KEY,
 })
 
 async function summarize(channel, msgID1, msgID2, cutoff) {
@@ -63,14 +63,14 @@ module.exports = {
         .setDescription("Summarizes a subset of messages in a specified channel.")
         .addStringOption(option =>
             option.setName("oldest")
-            .setDescription("The message to start the summary from.")
-            .setRequired(true))
+                .setDescription("The message to start the summary from.")
+                .setRequired(true))
         .addStringOption(option =>
             option.setName("newest")
-            .setDescription("The message to end the summary on (defaults to the most recent message)."))
+                .setDescription("The message to end the summary on (defaults to the most recent message)."))
         .addChannelOption(option =>
             option.setName("channel")
-            .setDescription("Specify a channel (defaults to the current channel).")),
+                .setDescription("Specify a channel (defaults to the current channel).")),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 

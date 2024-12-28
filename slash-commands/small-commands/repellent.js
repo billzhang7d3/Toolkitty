@@ -9,7 +9,7 @@ module.exports = {
         .setDescription("Sends a bunch of flashing color gifs.")
         .addIntegerOption(option =>
             option.setName("amount")
-            .setDescription("Maxes out at 16 gifs."))
+                .setDescription("Maxes out at 16 gifs."))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator), 
     /**
      * 

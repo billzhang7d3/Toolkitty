@@ -23,10 +23,10 @@ module.exports = {
         .setDescription("Replies with list of pins")
         .addIntegerOption(option=>
             option.setName("end-position")
-            .setDescription("Set the pin to stop at. Required field and must be less than the number of pins in the channel."))
+                .setDescription("Set the pin to stop at. Required field and must be less than the number of pins in the channel."))
         .addIntegerOption(option => 
             option.setName("start-position")
-            .setDescription("Set the starting pin number. If left empty, it starts at the first pin")),
+                .setDescription("Set the starting pin number. If left empty, it starts at the first pin")),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 

@@ -2,7 +2,7 @@ require("dotenv").config();
 const { SlashCommandBuilder } = require("discord.js");
 const { OpenAI } = require("openai");
 const openai = new OpenAI({
-    apiKey: process.env.API_KEY,
+    apiKey: process.env.OPENAI_API_KEY,
 })
 
 async function summarizeN(channel, amount) {
@@ -38,11 +38,11 @@ module.exports = {
         .setDescription("Summarizes the last n messages in a specified channel.")
         .addIntegerOption(option => 
             option.setName("n")
-            .setDescription("The amount of messages to summarize.")
-            .setRequired(true))
+                .setDescription("The amount of messages to summarize.")
+                .setRequired(true))
         .addChannelOption(option =>
             option.setName("channel")
-            .setDescription("Specify a channel (defaults to the current channel).")),
+                .setDescription("Specify a channel (defaults to the current channel).")),
     /**
      * 
      * @param {ChatInputCommandInteraction} interaction 
