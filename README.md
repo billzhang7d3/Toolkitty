@@ -4,8 +4,9 @@ A Discord bot with a set of commands that I would find useful for myself, from i
 ## WORK IN PROGRESS
 
 ## USAGE
-To duplicate this project into a different discord bot, follow the instructions [here](https://discordjs.guide/) to set up the basic functionality. Then the repo can be cloned.
+Clone the repo, and then run `npm install`. The PostgreSQL databases will require their own setup, refer to the `.env` File Configuration below. For further reference on setting up a Discord bot, refer to [here](https://discordjs.guide/).
 
+Run `node deploy-commands.js` and `node index.js` to run the bot.
 
 ## .env File Configuration
 ```
