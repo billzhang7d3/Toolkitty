@@ -9,14 +9,19 @@ To duplicate this project into a different discord bot, follow the instructions 
 
 ## .env File Configuration
 ```
-ARTWORK="your bot pfp image link here"
 TOKEN="your token here"
+CLIENT_ID="your client id here"
+GUILD_ID="your main server here"
+
+ARTWORK="your bot pfp image link here"
 OPENAI_API_KEY="your openai api key here"
 USERNAME1="your main here"
 USERNAME2="your alt here"
 
-PLAN_DB_USER="your bot name here"
-PLAN_DB_PASS="your bot password here"
-PLAN_DB_HOST="localhost"
-PLAN_DB_DATABASE="your bot database name here"
+DB_USER="your bot name here"
+DB_PASS="your bot password here"
+DB_HOST="localhost"
+
+PLAN_DB_DATABASE="I don't know why, but"
+GROCERY_DB_DATABASE="I have 2 separate DBs for these"
 ```

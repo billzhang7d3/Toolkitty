@@ -51,5 +51,3 @@ module.exports = {
     }
 }
 
-
-// let channel = interaction.options.getChannel("channel") ?? interaction.channel;
