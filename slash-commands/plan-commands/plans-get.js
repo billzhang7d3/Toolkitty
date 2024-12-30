@@ -34,11 +34,11 @@ module.exports = {
                 const getAllPlans = interaction.options.getBoolean("all") ?? false;
                 if (getAllPlans) {
                     const query = await db.query("SELECT * FROM plans_table;");
-                    console.log(`Query type: ${query.rows}`);
+                    // console.log(`Query type: ${query.rows}`);
                     await interaction.reply({ embeds: [buildResponse(query.rows)] });
                 } else {
-                    const query = await db.query("SELECT * FROM plans_table;");
-                    console.log(`Query type: ${query.rows}`);
+                    const query = await db.query("SELECT * FROM plans_table WHERE created_at >= NOW() - INTERVAL '24 HOURS';");
+                    // console.log(`Query type: ${query.rows}`);
                     await interaction.reply({ embeds: [buildResponse(query.rows)] });
                 }
             } catch (error) {
