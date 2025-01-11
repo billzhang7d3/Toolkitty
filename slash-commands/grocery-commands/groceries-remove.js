@@ -26,11 +26,9 @@ module.exports = {
                 const findQuery = await db.query(`SELECT * FROM groceries_table WHERE id = ${id};`);
                 if (findQuery.rows.length > 0) {  // item exists in the db
                     if (findQuery.rows[0].quantity - quantity > 0) {
-                        const updateQuery = await db.query(
-                            `UPDATE groceries_table SET quantity = ${findQuery.rows[0].quantity - quantity} WHERE id = '${id}';`)
+                        await db.query(`UPDATE groceries_table SET quantity = ${findQuery.rows[0].quantity - quantity} WHERE id = '${id}';`);
                     } else {
-                        const deleteQuery = await db.query(
-                            `DELETE FROM groceries_table WHERE id = ${id};`)
+                        await db.query(`DELETE FROM groceries_table WHERE id = ${id};`);
                     }
                 }
                 const result = await getGroceryList();

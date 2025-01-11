@@ -20,9 +20,7 @@ module.exports = {
             const item0 = item;
             item = item.replace("'", "''");
             try {
-                const query = await db.query(
-                    `INSERT INTO plans_table (item) VALUES ('${item}');`
-                );
+                await db.query(`INSERT INTO plans_table (item) VALUES ('${item}');`);
                 await interaction.reply(`__Plan successfully added:__\n${item0}`);
             } catch (error) {
                 console.log(`Error: ${error}`);

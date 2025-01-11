@@ -25,11 +25,9 @@ module.exports = {
             try {
                 const findQuery = await db.query(`SELECT * FROM groceries_table WHERE item = '${item}'`);
                 if (findQuery.rows.length > 0) {
-                    const updateQuery = await db.query(
-                        `UPDATE groceries_table SET quantity = ${quantity + findQuery.rows[0].quantity} WHERE item = '${item}';`)
+                    await db.query(`UPDATE groceries_table SET quantity = ${quantity + findQuery.rows[0].quantity} WHERE item = '${item}';`);
                 } else if (quantity > 0) {
-                    const query = await db.query(
-                        `INSERT INTO groceries_table (item, quantity) VALUES ('${item}', ${quantity});`);
+                    await db.query(`INSERT INTO groceries_table (item, quantity) VALUES ('${item}', ${quantity});`);
                 }
                 const result = await getGroceryList();
                 await interaction.reply({ embeds: [result] });

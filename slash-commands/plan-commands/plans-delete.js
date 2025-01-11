@@ -21,7 +21,7 @@ module.exports = {
                 const findQuery = await db.query(`SELECT * FROM plans_table WHERE id = ${id};`);
                 if (findQuery.rows.length > 0) {
                     // we have an entry we can delete
-                    const deleteQuery = await db.query(`DELETE FROM plans_table WHERE id = ${id};`);
+                    await db.query(`DELETE FROM plans_table WHERE id = ${id};`);
                     await interaction.reply(`__Deleted item with id #**${id}**:__\n\`${findQuery.rows[0].item}\``);
                 } else {
                     // we can't delete
