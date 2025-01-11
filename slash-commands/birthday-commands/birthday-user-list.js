@@ -36,7 +36,7 @@ module.exports = {
         while (db.setupState === "setting up") {}
         const guild_id = interaction.guildId;
         try {
-            const query = await db.query(`SELECT * FROM birthdays WHERE guild_id = '${guild_id}' ORDER BY month ASC, day ASC`);
+            const query = await db.query(`SELECT * FROM birthdays WHERE guild_id = '${guild_id}' ORDER BY month ASC, day ASC;`);
             await interaction.reply({ embeds: [buildResponse(query.rows)] });
         } catch (error) {
             console.log(`Error: ${error}`);

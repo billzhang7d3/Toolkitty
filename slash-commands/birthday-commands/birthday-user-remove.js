@@ -14,9 +14,9 @@ module.exports = {
         const guild_id = interaction.guildId;
         const user_id = interaction.user.id;
         try {
-            const getQuery = await db.query(`SELECT * FROM birthdays WHERE guild_id = '${guild_id}' AND user_id = '${user_id}'`);
+            const getQuery = await db.query(`SELECT * FROM birthdays WHERE guild_id = '${guild_id}' AND user_id = '${user_id}';`);
             if (getQuery.rows.length > 0) {
-                await db.query(`DELETE FROM birthdays WHERE guild_id = '${guild_id}' AND user_id = '${user_id}'`);
+                await db.query(`DELETE FROM birthdays WHERE guild_id = '${guild_id}' AND user_id = '${user_id}';`);
                 await interaction.reply("Birthday sucessfully removed for future server announcements");
             } else {
                 await interaction.reply("Your birthday is not present for future server announcements anyways");

@@ -17,9 +17,9 @@ let ready = false;
 async function createDB() {
     try {
         await pool.connect();
-        const result = await pool.query(`SELECT 1 FROM pg_database WHERE datname = '${dbName}'`);
+        const result = await pool.query(`SELECT 1 FROM pg_database WHERE datname = '${dbName}';`);
         if (result.rows.length === 0) {  // db does not exist, let's create it
-            await pool.query(`CREATE DATABASE ${dbName}`);
+            await pool.query(`CREATE DATABASE ${dbName};`);
             console.log("birthday-accounce: database created");
         } else {
             console.log("birthday-accounce: database already exists");
@@ -53,8 +53,7 @@ async function createBirthdayTable() {
     query += "guild_id VARCHAR(30),";
     query += "month INTEGER,";
     query += "day INTEGER,";
-    query += "user_id VARCHAR(30),";
-    query += "UNIQUE(user_id));"
+    query += "user_id VARCHAR(30));";
 
     try {
         await pool.query(query);

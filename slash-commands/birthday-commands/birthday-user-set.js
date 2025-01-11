@@ -28,11 +28,11 @@ module.exports = {
             return;
         }
         try {
-            const getQuery = await db.query(`SELECT * FROM birthdays WHERE guild_id = '${guild_id}' AND user_id = '${user_id}'`);
+            const getQuery = await db.query(`SELECT * FROM birthdays WHERE guild_id = '${guild_id}' AND user_id = '${user_id}';`);
             if (getQuery.rows.length > 0) {
-                await db.query(`UPDATE birthdays SET month = ${month}, day = ${day} WHERE guild_id = '${guild_id}' AND user_id = '${user_id}'`);
+                await db.query(`UPDATE birthdays SET month = ${month}, day = ${day} WHERE guild_id = '${guild_id}' AND user_id = '${user_id}';`);
             } else {
-                await db.query(`INSERT INTO birthdays (month, day, guild_id, user_id) VALUES (${month}, ${day}, '${guild_id}', '${user_id}')`);
+                await db.query(`INSERT INTO birthdays (month, day, guild_id, user_id) VALUES (${month}, ${day}, '${guild_id}', '${user_id}');`);
             }
             await interaction.reply(`Set your birthday (${db.months[month - 1]} ${day}) for server annoucements`);
         } catch (error) {

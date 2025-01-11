@@ -2,6 +2,8 @@ require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
 const { Client, Collection, Events, GatewayIntentBits, EmbedBuilder } = require("discord.js");
+const bc = require("./birthdays/birthday-announce.js");
+const cron = require("cron");
 
 const client = new Client({intents: [
     GatewayIntentBits.Guilds
@@ -74,5 +76,15 @@ function buildResponse(question) {
         .setFooter({text: ":3", iconURL: "https://cdn.donmai.us/original/e8/f5/__minato_aqua_and_minato_aqua_hololive_drawn_by_aka_shiba__e8f54af06a53c1fb675397b06823b134.png"});
     return embed;
 }
+
+client.once("ready", () => {
+    console.log('ready to announce birthdays');
+    let announceBirthday = cron.CronJob.from({
+        cronTime: "0 1 0 * * * ",
+        onTick: async () => { bc.checkBirthday(client); },
+        start: true,
+        timeZone: "America/Los_Angeles",
+    });
+});
 
 client.login(process.env.TOKEN);

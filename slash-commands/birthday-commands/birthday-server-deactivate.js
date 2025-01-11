@@ -14,7 +14,7 @@ module.exports = {
         }
         while (db.setupState === "setting up") {}
         const guild_id = interaction.guildId;
-        console.log(guild_id);
+        // console.log(guild_id);
         try {
             const getQuery = await db.query(`SELECT FROM guilds WHERE guild_id = '${guild_id}'`);
             if (getQuery.rows.length > 0) {

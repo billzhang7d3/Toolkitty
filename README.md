@@ -4,7 +4,7 @@ A Discord bot with a set of commands that I would find useful for myself, from i
 ## WORK IN PROGRESS
 
 ## USAGE
-Clone the repo, and then run `npm install`. The PostgreSQL databases will require their own setup, refer to the `.env` File Configuration below. For further reference on setting up a Discord bot, refer to [here](https://discordjs.guide/).
+Clone the repo, and then run `npm install`. The PostgreSQL databases will require their own setup (specifically user creation), refer to the `.env` File Configuration below (the birthdays database will set itself up upon running the bot). For further reference on setting up a Discord bot, refer to [here](https://discordjs.guide/).
 
 Run `node deploy-commands.js` and `node index.js` to run the bot.
 
