@@ -30,6 +30,12 @@ module.exports = {
                 .setRequired(false)),
     async execute(interaction) {
         if (isCorrectUser(interaction.user.username)) {
+            // check if database exists, create if doesn't exist
+            if (db.sharedState.setup === "not started") {
+                await db.setupDB();
+            }
+            while (db.sharedState.setup === "setting up") {}
+            // command begins here
             try {
                 const getAllPlans = interaction.options.getBoolean("all") ?? false;
                 if (getAllPlans) {

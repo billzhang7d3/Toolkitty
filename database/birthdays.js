@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { Client, Pool } = require("pg");
+const { Pool } = require("pg");
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -9,12 +9,11 @@ const pool = new Pool({
     database: "postgres",
 });
 
-const dbName = "birthday_db";
-
+const dbName = process.env.BIRTHDAY_DB_DATABASE;
 const sharedState = {
     setup: "not started",
 };
-let ready = false;
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 async function createDB() {
     try {
@@ -44,7 +43,7 @@ async function createGuildTable() {
         await pool.query(query);
         console.log("birthday-announce: guild table should be ready");
     } catch (err) {
-        console.error('Error checking or creating the database:', err);
+        console.error("Error checking or creating the database:", err);
     }
 }
 
@@ -61,7 +60,7 @@ async function createBirthdayTable() {
         await pool.query(query);
         console.log("birthday-announce: birthday table should be ready");
     } catch (err) {
-        console.error('Error checking or creating the database:', err);
+        console.error("Error checking or creating the database:", err);
     }
 }
 
@@ -73,8 +72,6 @@ async function setupDB() {
     console.log("birthday-announce: FINISHED SETTING UP THE DB");
     sharedState.setup = "done";
 }
-
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 module.exports = {
     query: (text, params) => pool.query(text, params),

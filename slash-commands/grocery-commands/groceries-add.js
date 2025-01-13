@@ -20,6 +20,12 @@ module.exports = {
                 .setDescription("how much items to add to the list?")),
     async execute(interaction) {
         if (isCorrectUser(interaction.user.username)) {
+            // check if database exists, create if doesn't exist
+            if (db.sharedState.setup === "not started") {
+                await db.setupDB();
+            }
+            while (db.sharedState.setup === "setting up") {}
+            // command begins here
             const item = interaction.options.getString("item").replace("'", "''");
             const quantity = Math.max(interaction.options.getInteger("quantity") ?? 1, 0);
             try {

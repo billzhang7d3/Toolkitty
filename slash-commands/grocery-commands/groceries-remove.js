@@ -20,6 +20,12 @@ module.exports = {
             .setDescription("How much of that item to remove")),
     async execute(interaction) {
         if (isCorrectUser(interaction.user.username)) {
+            // check if database exists, create if doesn't exist
+            if (db.sharedState.setup === "not started") {
+                await db.setupDB();
+            }
+            while (db.sharedState.setup === "setting up") {}
+            // command begins here
             const id = interaction.options.getInteger("id");
             const quantity = Math.max(interaction.options.getInteger("quantity") ?? 1, 0);
             try {

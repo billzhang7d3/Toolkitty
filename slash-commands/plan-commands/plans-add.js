@@ -16,6 +16,12 @@ module.exports = {
                 .setRequired(true)),
     async execute(interaction) {
         if (isCorrectUser(interaction.user.username)) {
+            // check if database exists, create if doesn't exist
+            if (db.sharedState.setup === "not started") {
+                await db.setupDB();
+            }
+            while (db.sharedState.setup === "setting up") {}
+            // command begins here
             let item = interaction.options.getString("plan");
             const item0 = item;
             item = item.replace("'", "''");
