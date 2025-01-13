@@ -29,11 +29,11 @@ module.exports = {
         .setName("birthday-user-list")
         .setDescription("Get a list of birthdays for this server"),
     async execute(interaction) {
-        console.log(`starting command with ${db.setupState}`);
-        if (db.setupState === "not started") {
+        console.log(`starting command with ${db.sharedState.setup}`);
+        if (db.sharedState.setup === "not started") {
             await db.setupDB();
         }
-        while (db.setupState === "setting up") {}
+        while (db.sharedState.setup === "setting up") {}
         const guild_id = interaction.guildId;
         try {
             const query = await db.query(`SELECT * FROM birthdays WHERE guild_id = '${guild_id}' ORDER BY month ASC, day ASC;`);

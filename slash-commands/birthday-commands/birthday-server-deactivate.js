@@ -9,10 +9,10 @@ module.exports = {
         .setDescription("turns off the birthday announcements (requires administrative priveledges)")
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
-        if (db.setupState === "not started") {
+        if (db.sharedState.setup === "not started") {
             await db.setupDB();
         }
-        while (db.setupState === "setting up") {}
+        while (db.sharedState.setup === "setting up") {}
         const guild_id = interaction.guildId;
         // console.log(guild_id);
         try {

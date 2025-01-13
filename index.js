@@ -6,7 +6,8 @@ const bc = require("./birthdays/birthday-announce.js");
 const cron = require("cron");
 
 const client = new Client({intents: [
-    GatewayIntentBits.Guilds
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
 ]});
 
 let asked = false;
@@ -77,10 +78,12 @@ function buildResponse(question) {
     return embed;
 }
 
+const cronTimeTest      = "5 * * * * * ";
+const cronTimeDeploy    = "* 1 0 * * * ";
 client.once("ready", () => {
-    console.log('ready to announce birthdays');
+    console.log("ready to announce birthdays");
     let announceBirthday = cron.CronJob.from({
-        cronTime: "0 1 0 * * * ",
+        cronTime: cronTimeDeploy,
         onTick: async () => { bc.checkBirthday(client); },
         start: true,
         timeZone: "America/Los_Angeles",

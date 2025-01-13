@@ -15,10 +15,10 @@ module.exports = {
                 .setDescription("birthday day")
                 .setRequired(true)),
     async execute(interaction) {
-        if (db.setupState === "not started") {
+        if (db.sharedState.setup === "not started") {
             await db.setupDB();
         }
-        while (db.setupState === "setting up") {}
+        while (db.sharedState.setup === "setting up") {}
         const month = interaction.options.getInteger("month");
         const day = interaction.options.getInteger("day");
         const guild_id = interaction.guildId;

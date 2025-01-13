@@ -11,7 +11,9 @@ const pool = new Pool({
 
 const dbName = "birthday_db";
 
-let setupState = "not started";
+const sharedState = {
+    setup: "not started",
+};
 let ready = false;
 
 async function createDB() {
@@ -20,9 +22,9 @@ async function createDB() {
         const result = await pool.query(`SELECT 1 FROM pg_database WHERE datname = '${dbName}';`);
         if (result.rows.length === 0) {  // db does not exist, let's create it
             await pool.query(`CREATE DATABASE ${dbName};`);
-            console.log("birthday-accounce: database created");
+            console.log("birthday-announce: database created");
         } else {
-            console.log("birthday-accounce: database already exists");
+            console.log("birthday-announce: database already exists");
         }
         pool.database = dbName;
     } catch (err) {
@@ -40,7 +42,7 @@ async function createGuildTable() {
     
     try {
         await pool.query(query);
-        console.log("birthday-accounce: guild table should be ready");
+        console.log("birthday-announce: guild table should be ready");
     } catch (err) {
         console.error('Error checking or creating the database:', err);
     }
@@ -57,19 +59,19 @@ async function createBirthdayTable() {
 
     try {
         await pool.query(query);
-        console.log("birthday-accounce: birthday table should be ready");
+        console.log("birthday-announce: birthday table should be ready");
     } catch (err) {
         console.error('Error checking or creating the database:', err);
     }
 }
 
 async function setupDB() {
-    setupState = "setting up";
+    sharedState.setup = "setting up";
     await createDB();
     await createGuildTable();
     await createBirthdayTable();
     console.log("birthday-announce: FINISHED SETTING UP THE DB");
-    setupState = "done";
+    sharedState.setup = "done";
 }
 
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -77,6 +79,6 @@ const months = ["January", "February", "March", "April", "May", "June", "July", 
 module.exports = {
     query: (text, params) => pool.query(text, params),
     setupDB,
-    setupState,
+    sharedState,
     months,
 };

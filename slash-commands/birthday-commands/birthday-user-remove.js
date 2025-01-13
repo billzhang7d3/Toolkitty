@@ -7,10 +7,10 @@ module.exports = {
         .setName("birthday-user-remove")
         .setDescription("remove your birthday from future server announcements"),
     async execute(interaction) {
-        if (db.setupState === "not started") {
+        if (db.sharedState.setup === "not started") {
             await db.setupDB();
         }
-        while (db.setupState === "setting up") {}
+        while (db.sharedState.setup === "setting up") {}
         const guild_id = interaction.guildId;
         const user_id = interaction.user.id;
         try {

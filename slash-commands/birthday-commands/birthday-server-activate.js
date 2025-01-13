@@ -13,10 +13,10 @@ module.exports = {
                 .setRequired(true))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
-        if (db.setupState === "not started") {
+        if (db.sharedState.setup === "not started") {
             await db.setupDB();
         }
-        while (db.setupState === "setting up") {}
+        while (db.sharedState.setup === "setting up") {}
         console.log("CHECKPOINT");
         const guild_id = interaction.guildId;
         const channel_id = interaction.options.getChannel("channel");
